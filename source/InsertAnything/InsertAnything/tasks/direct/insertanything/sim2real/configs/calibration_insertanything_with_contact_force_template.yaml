@@ -1,0 +1,75 @@
+version: 1
+profile_name: "insertanything_basic_single_hole_with_contact_force"
+description: "InsertAnything single-hole sim-to-real deployment template with robot-state contact-force observation."
+
+transforms:
+  T_AT:
+    position: [0.0, 0.0, 0.0]
+    quat_xyzw: [0.0, 0.0, 0.0, 1.0]
+    source: "placeholder"
+    note: "API frame A to fingertip frame T. Replace with measured extrinsics if available."
+
+  T_BH_final:
+    position: [0.5000000000, 0.0000000000, 0.0400000000]
+    quat_xyzw: [1.0, 0.0, 0.0, 0.0]
+    source: "manual teaching placeholder"
+    note: "Replace with the real single-hole reference pose."
+
+  T_BPRE_final:
+    position: [0.5000000000, 0.0000000000, 0.0900000000]
+    quat_xyzw: [1.0, 0.0, 0.0, 0.0]
+    source: "derived from T_BH_final"
+    pre_hover_height_m: 0.05
+
+policy_observation:
+  obs_order:
+    - fingertip_pos_rel_fixed
+    - fingertip_quat
+    - fingertip_quat_rel_fixed
+    - ee_linvel
+    - ee_angvel
+    - contact_force
+  append_prev_actions: true
+
+  quat_order: "wxyz"
+  canonicalize_quat_sign: false
+  yaw_offset_deg: 0.0
+  zero_vel_for_debug: false
+  pos_rel_bias_m: [0.0, 0.0, 0.0]
+
+  requires_orientation_logic: true
+  symmetry_angles_deg: [0.0]
+  relative_quat_reference_quat_xyzw: [0.0, 0.0, 0.0, 1.0]
+  quat_rel_dim3_expected_sign: 0
+
+  contact_force_mode: "error"
+
+  fake_policy_roll_pitch_mode: "none"
+  fake_policy_roll_mean_deg: 180.0
+  fake_policy_pitch_mean_deg: 0.0
+  fake_policy_roll_std_deg: 0.0
+  fake_policy_pitch_std_deg: 0.0
+  grasp_yaw_comp_deg: 0.0
+
+policy_structure:
+  action_dim: 6
+  hidden_size: 1024
+  num_layers: 2
+  mlp_units: [512, 128, 64]
+  dtype: "float32"
+
+action_postprocessor:
+  pos_action_threshold: [0.01, 0.01, 0.01]
+  rot_action_threshold: [0.045, 0.045, 0.045]
+  pos_action_bounds: [0.05, 0.05, 0.05]
+
+safety_guard:
+  enable_hole_box_clip: true
+  enable_step_clip: true
+  enforce_ref_roll_pitch: true
+
+notes:
+  - "Actor observation dimension is 26 when append_prev_actions is true."
+  - "Run with --contact-force-source robot_state.force_K_debug."
+  - "The robot state must expose force_K_debug or force as a 3D vector."
+  - "Runtime CLI values override EMA, raw-action clipping, yaw limits, step limits, and hole-box bounds."

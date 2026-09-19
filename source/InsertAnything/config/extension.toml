@@ -1,0 +1,27 @@
+[package]
+
+# Semantic Versioning is used: https://semver.org/
+version = "0.1.0"
+
+# Description
+category = "isaaclab"
+readme  = "README.md"
+
+title = "InsertAnything"
+author = "InsertAnything Contributors"
+maintainer = "InsertAnything Contributors"
+description = "Isaac Lab extension for InsertAnything peg-in-hole simulation, training, and deployment workflows."
+repository = "https://github.com/mzhsoul/InsertAnything"
+keywords = ["isaaclab", "reinforcement-learning", "peg-in-hole", "robotics", "insertanything"]
+
+[dependencies]
+"isaaclab" = {}
+"isaaclab_assets" = {}
+"isaaclab_mimic" = {}
+"isaaclab_rl" = {}
+"isaaclab_tasks" = {}
+
+[[python.module]]
+name = "InsertAnything"
+
+[isaaclab_settings]
