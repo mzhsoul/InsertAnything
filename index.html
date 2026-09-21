@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="InsertAnything: Generalizable Contact-Rich Precision Insertion from Simulation to Reality." />
+    <title>InsertAnything | Precision Insertion from Simulation to Reality</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="InsertAnything home">InsertAnything</a>
+      <nav aria-label="Primary navigation">
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#videos">Videos</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero page-width">
+        <div class="affiliation-logos" aria-label="Affiliations">
+          <img src="assets/logos/ucas.png" alt="University of Chinese Academy of Sciences" />
+          <img src="assets/logos/casia.jpg" alt="Chinese Academy of Sciences" />
+          <img src="assets/logos/paxini.jpg" alt="PaXini AI" />
+        </div>
+        <p class="overline">Contact-rich robotic manipulation</p>
+        <h1><span>InsertAnything:</span><span>Generalizable Contact-Rich Precision Insertion</span><span>from Simulation to Reality</span></h1>
+        <p class="authors"><span>Zhenghua Ma<sup>a,b,*</sup></span>, <span>Xinpan Meng<sup>a,b</sup></span>, <span>Zeyu Liu<sup>a,b</sup></span>, <span>Muyuan Ma<sup>a,b</sup></span>, <span>Hengdi Zhang<sup>c</sup></span>, <span>Houcheng Li<sup>a,b,*</sup></span>, <span>Long Cheng<sup>a,b,*</sup></span></p>
+        <p class="affiliations"><span><sup>a</sup> University of Chinese Academy of Sciences</span><span><sup>b</sup> Institute of Automation, Chinese Academy of Sciences</span><span><sup>c</sup> PaXini AI Technology (Beijing) Co., Ltd.</span><span><sup>*</sup> Corresponding authors</span></p>
+        <div class="resource-links" aria-label="Project resources">
+          <a class="resource-link" href="https://github.com/mzhsoul/InsertAnything" target="_blank" rel="noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.8 9.8 0 0 0-3.1 19.1c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 0 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.9.1-.6.4-1.1.7-1.3-2.2-.3-4.5-1.1-4.5-4.8 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.5 9.5 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.7-2.3 4.5-4.5 4.8.4.3.7.9.7 1.8v2.7c0 .3.2.6.7.5A9.8 9.8 0 0 0 12 2.2Z"/></svg>
+            <span>GitHub</span>
+          </a>
+          <a class="resource-link" href="https://huggingface.co/tOMRmA/InsertAnything-checkpoints" target="_blank" rel="noreferrer">
+            <img class="brand-icon" src="assets/icons/huggingface.svg" width="24" height="24" alt="" /><span>Hugging Face</span>
+          </a>
+          <span class="resource-link disabled" aria-disabled="true"><img class="brand-icon" src="assets/icons/arxiv.jpg" width="24" height="24" alt="" /><span>arXiv (soon)</span></span>
+        </div>
+      </section>
+
+      <section class="hero-video page-width">
+        <video controls playsinline preload="metadata" poster="assets/posters/main.webp">
+          <source src="assets/video/main.mp4" type="video/mp4" />
+          Your browser does not support embedded video.
+        </video>
+        <p class="caption">Supplementary Video 1. Simulation-trained precision insertion and real-robot demonstrations.</p>
+      </section>
+
+      <section class="key-results page-width" aria-label="Key results">
+        <div><strong>0.02 mm</strong><span>tight nominal clearance</span></div>
+        <div><strong>20/20</strong><span>ManipulationNet completion</span></div>
+        <div><strong>95.0%</strong><span>eight unseen real-world tasks</span></div>
+      </section>
+
+      <section class="content-section page-width" id="abstract">
+        <p class="section-label">Abstract</p>
+        <p class="lead-copy">Precision insertion requires a robot to combine nominal geometry with contact information when small pose errors can cause jamming or excessive force. InsertAnything develops a simulation-only reinforcement learning framework that combines target poses with compact three-dimensional fingertip force feedback, enabling direct transfer to real robots without real-world demonstrations or policy fine-tuning. A decoupled gated reward coordinates alignment and insertion, while force-signal smoothing and state-independent exploration improve training stability and contact-aware motion correction. The resulting policy generalizes across clearances and geometries, achieves a 20/20 completion rate on ManipulationNet under its Human-in-the-Loop protocol, and reaches 95.0% success across eight unseen real-world insertion tasks.</p>
+      </section>
+
+      <section class="content-section page-width" id="method">
+        <div class="section-header">
+          <p class="section-label">01 · Method</p>
+          <h2>Learning precision insertion in simulation</h2>
+          <p>Target poses provide a nominal reference; fingertip force feedback supplies the local information needed to correct contact.</p>
+        </div>
+        <figure class="wide-figure">
+          <img src="assets/figures/fig01.webp" alt="InsertAnything simulation-to-reality framework and force-feedback policy pipeline" />
+          <figcaption>Overview of the simulation-to-reality framework. The policy uses deployable pose and fingertip force observations during execution, while privileged information is available only to the critic during training.</figcaption>
+        </figure>
+        <div class="method-points">
+          <article><span>01</span><h3>Simulation-only training</h3><p>Parallel contact simulation exposes the policy to pose and dynamics uncertainty before deployment.</p></article>
+          <article><span>02</span><h3>Compact force feedback</h3><p>Three-dimensional fingertip force feedback reveals contact states that a nominal pose cannot distinguish.</p></article>
+          <article><span>03</span><h3>Direct execution</h3><p>The same observation and control interface is used in simulation and on a Franka Emika robot with a PaXini tactile sensor.</p></article>
+        </div>
+      </section>
+
+      <section class="content-section page-width">
+        <div class="section-header">
+          <p class="section-label">02 · Contributions</p>
+          <h2>Three results that connect learning and deployment</h2>
+        </div>
+        <div class="contributions">
+          <article><span>01</span><h3>Simulation-only transfer</h3><p>A force-guided precision insertion framework combines nominal target poses with compact three-dimensional fingertip force feedback for direct deployment without real-world demonstrations or policy fine-tuning.</p></article>
+          <article><span>02</span><h3>Stable force learning</h3><p>A decoupled gated reward and stabilized force-feedback learning scheme improve alignment, insertion, robustness to localization errors, and contact-force regulation.</p></article>
+          <article><span>03</span><h3>Generalization in practice</h3><p>Extensive evaluations cover clearances, geometries, unseen real-world insertion tasks, and the first perfect 20/20 ManipulationNet result under its Human-in-the-Loop protocol.</p></article>
+        </div>
+      </section>
+
+      <section class="content-section page-width" id="results">
+        <div class="section-header">
+          <p class="section-label">03 · Results</p>
+          <h2>Reliable contact-rich insertion beyond one geometry</h2>
+        </div>
+        <figure class="wide-figure result-figure">
+          <img src="assets/figures/fig08.webp" alt="Eight unseen real-world insertion tasks" />
+          <figcaption>A single Hexagon-III policy transfers to eight unseen real-world insertion tasks, including USB Type-A, two-pin and three-pin connectors, a DC power connector, a gear-mesh task, and three industrial connectors.</figcaption>
+        </figure>
+      </section>
+
+      <section class="content-section page-width" id="videos">
+        <div class="section-header">
+          <p class="section-label">04 · Real-robot demonstrations</p>
+          <h2>Contact, clearance, and geometry in the real world</h2>
+          <p>The clips highlight force-guided correction, tight-clearance insertion, continuous benchmark execution, and transfer to unseen industrial interfaces.</p>
+        </div>
+        <div class="video-grid">
+          <article class="video-item"><video controls playsinline preload="metadata" poster="assets/posters/force.webp"><source src="assets/video/force-comparison.mp4" type="video/mp4" /></video><h3>Force feedback</h3><p>Pose-error correction with and without fingertip force feedback.</p></article>
+          <article class="video-item"><video controls playsinline preload="metadata" poster="assets/posters/shapes.webp"><source src="assets/video/standard-shapes.mp4" type="video/mp4" /></video><h3>Standard geometries</h3><p>Four tight-clearance peg-in-hole geometries.</p></article>
+          <article class="video-item"><video controls playsinline preload="metadata" poster="assets/posters/benchmark.webp"><source src="assets/video/benchmark.mp4" type="video/mp4" /></video><h3>ManipulationNet</h3><p>Continuous autonomous execution across the benchmark sequence.</p></article>
+          <article class="video-item"><video controls playsinline preload="metadata" poster="assets/posters/unseen.webp"><source src="assets/video/unseen-tasks.mp4" type="video/mp4" /></video><h3>Unseen insertion tasks</h3><p>Eight real-world tasks completed by one simulation-trained policy.</p></article>
+        </div>
+      </section>
+
+      <section class="content-section page-width" id="recognition">
+        <div class="section-header">
+          <p class="section-label">05 · External recognition</p>
+          <h2>A benchmark result recognized by ManipulationNet</h2>
+          <p>The benchmark uses a standardized physical setup, while its Human-in-the-Loop protocol limits human involvement to reporting task status. The public leaderboard and official announcement provide an external record of the result.</p>
+        </div>
+        <div class="recognition-stack">
+          <figure class="recognition-item">
+            <img src="assets/figures/manipulationnet.webp" alt="Official ManipulationNet result announcement" />
+            <figcaption class="recognition-link"><a href="https://manipulation-net.org/leaderboards/peg_in_hole.html" target="_blank" rel="noreferrer">ManipulationNet peg-in-hole leaderboard ↗</a></figcaption>
+          </figure>
+          <figure class="recognition-item">
+            <img src="assets/figures/manipulationnet-social.webp" alt="Official social-media announcement" />
+            <figcaption class="recognition-link"><a href="https://www.xiaohongshu.com/discovery/item/6aa2c3760000000028030276?source=webshare&xhsshare=pc_web&xsec_token=CBZMBEvFjMPJU7v_KvVKE_4bWnzdes_tuHofGBcmETLAs=&xsec_source=pc_share" target="_blank" rel="noreferrer">Official social-media announcement ↗</a></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="citation page-width">
+        <p class="section-label">Citation</p>
+        <p>InsertAnything: Generalizable Contact-Rich Precision Insertion from Simulation to Reality</p>
+        <div class="citation-box">
+          <textarea id="bibtex" readonly spellcheck="false">@article{insertanything2026,
+  title = {InsertAnything: Generalizable Contact-Rich Precision Insertion from Simulation to Reality},
+  author = {Ma, Zhenghua and Meng, Xinpan and Liu, Zeyu and Ma, Muyuan and Zhang, Hengdi and Li, Houcheng and Cheng, Long},
+  year = {2026}
+}</textarea>
+          <button class="copy-button" type="button" data-copy-target="bibtex">Copy BibTeX</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="page-width footer-inner">
+        <span>InsertAnything</span>
+        <span>UCAS · CASIA · PaXini AI</span>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
