@@ -103,7 +103,7 @@ h3 { margin: 8px 0 7px; font-size: 20px; line-height: 1.2; letter-spacing: -.02e
 .citation { margin-top: 94px; padding: 22px 0 72px; border-top: 1px solid var(--line); }
 .citation p:not(.section-label) { margin: 8px 0 12px; font-size: 16px; }
 .citation-box { position: relative; }
-.citation-box textarea { display: block; width: 100%; min-height: 132px; padding: 15px 125px 15px 16px; resize: vertical; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); background: var(--soft); font: 14px/1.55 Consolas, "SFMono-Regular", monospace; }
+.citation-box textarea { display: block; width: 100%; min-height: 250px; padding: 15px 125px 15px 16px; resize: vertical; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); background: var(--soft); font: 14px/1.55 Consolas, "SFMono-Regular", monospace; }
 .copy-button { position: absolute; top: 11px; right: 11px; padding: 8px 12px; border: 1px solid #cbd5da; border-radius: 5px; color: var(--accent); background: #fff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
 .copy-button:hover { border-color: var(--accent); background: var(--accent-soft); }
 .site-footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
