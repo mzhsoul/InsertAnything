@@ -28,38 +28,5 @@
             "program": "${workspaceFolder}/scripts/rl_games/play.py",
             "console": "integratedTerminal",
         },
-        // For script execution inside a Docker
-        {
-            "name": "Docker: Current File",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "env": {
-                "PYTHONPATH": "${env:PYTHONPATH}:${workspaceFolder}"
-            }
-        },
-        {
-            "name": "Docker: Train InsertAnything-CircleHole-I-Direct-v0 with RL-Games (PPO)",
-            "type": "debugpy",
-            "request": "launch",
-            "args" : ["--task", "InsertAnything-CircleHole-I-Direct-v0", "--num_envs", "128", "--headless"],
-            "program": "${workspaceFolder}/scripts/rl_games/train.py",
-            "console": "integratedTerminal",
-            "env": {
-                "PYTHONPATH": "${env:PYTHONPATH}:${workspaceFolder}"
-            },
-        },
-        {
-            "name": "Docker: Play InsertAnything-LHole-III-Direct-v0 with RL-Games (PPO)",
-            "type": "debugpy",
-            "request": "launch",
-            "args" : ["--task", "InsertAnything-LHole-III-Direct-v0", "--num_envs", "128", "--checkpoint", "${workspaceFolder}/source/InsertAnything/InsertAnything/tasks/direct/insertanything/checkpoints/InsertAnything-LHole-III-Direct-v0.pth"],
-            "program": "${workspaceFolder}/scripts/rl_games/play.py",
-            "console": "integratedTerminal",
-            "env": {
-                "PYTHONPATH": "${env:PYTHONPATH}:${workspaceFolder}"
-            },
-        },
     ]
 }

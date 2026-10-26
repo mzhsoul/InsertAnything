@@ -71,13 +71,15 @@ class CSVDataLogger:
         if len(values) != self.signal_dim:
             raise ValueError(f"Expected signal_dim={self.signal_dim}, got {len(values)}")
 
-        self.csv_writer.writerow([
-            int(step),
-            int(bool(is_engaged)),
-            int(bool(is_engaged_half)),
-            int(bool(is_success)),
-            *values,
-        ])
+        self.csv_writer.writerow(
+            [
+                int(step),
+                int(bool(is_engaged)),
+                int(bool(is_engaged_half)),
+                int(bool(is_success)),
+                *values,
+            ]
+        )
 
     def close(self):
         """Close the active CSV file if one is open."""

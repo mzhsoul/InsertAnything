@@ -24,7 +24,7 @@ def _clip_with_flag(value: float, low: float, high: float) -> tuple[float, bool]
 
 @dataclass
 class ActionPostprocessorConfig:
-    """Implementation helper."""
+    """Configuration for converting policy actions into fingertip targets."""
 
     ema_factor: float = 0.2
 
@@ -59,7 +59,7 @@ class ActionPostprocessorState:
 
 @dataclass
 class ActionPostprocessorOutput:
-    """Implementation helper."""
+    """Intermediate and final outputs of action postprocessing."""
 
     raw_action: np.ndarray
     clipped_action: np.ndarray
@@ -116,7 +116,7 @@ class ActionPostprocessor:
         action_raw: np.ndarray,
         state: ActionPostprocessorState,
     ) -> tuple[ActionPostprocessorOutput, ActionPostprocessorState]:
-        """Implementation helper."""
+        """Convert one policy action into a candidate fingertip target."""
         action_raw = _as_np_1d(action_raw, 6, "action_raw")
         current_T_BT = _as_np_1d(current_T_BT, 7, "current_T_BT")
         fixed_pos_frame_pose = _as_np_1d(fixed_pos_frame_pose, 7, "fixed_pos_frame_pose")

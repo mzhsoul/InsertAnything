@@ -16,7 +16,7 @@ The repository provides:
 - Compact fingertip force feedback, reward shaping, and force logging.
 - Stable force-conditioned training with force-signal smoothing and state-independent policy standard deviation.
 - Real-robot closed-loop deployment utilities for calibrated Franka experiments.
-- Optional single-hole smoke-test checkpoints hosted on Hugging Face.
+- Validated single-hole checkpoints hosted on Hugging Face.
 
 The codebase accompanies the paper:
 
@@ -49,7 +49,7 @@ The codebase accompanies the paper:
 
 ## Project status
 
-InsertAnything is organized as an external Isaac Lab extension. The simulation side is self-contained inside this repository, including open USD assets, task configurations, RL-Games training configurations, and checkpoint instructions. The real-robot side provides deployment code and configuration templates, but requires a compatible Franka control stack, a calibrated robot setup, and operator supervision.
+InsertAnything is organized as an external Isaac Lab extension. The repository includes the insertion assets, task configurations, RL-Games configurations, and deployment utilities. The Franka robot and workbench models are loaded from the standard Isaac Lab and Isaac Sim asset collections.
 
 ## Installation
 
@@ -64,6 +64,8 @@ Then install InsertAnything:
 ```bash
 python -m pip install -e source/InsertAnything
 ```
+
+All commands in this repository use Bash syntax and are intended to be run from the repository root on Linux.
 
 List the registered InsertAnything environments:
 
@@ -112,17 +114,17 @@ Optional checkpoints are hosted on Hugging Face:
 
 Download the released checkpoints:
 
-```powershell
-hf download tOMRmA/InsertAnything-checkpoints InsertAnything-LHole-III-Direct-v0.pth `
-  --repo-type model `
+```bash
+hf download tOMRmA/InsertAnything-checkpoints InsertAnything-LHole-III-Direct-v0.pth \
+  --repo-type model \
   --local-dir source/InsertAnything/InsertAnything/tasks/direct/insertanything/checkpoints
 
-hf download tOMRmA/InsertAnything-checkpoints InsertAnything-HexagonHole-III-Direct-v0.pth `
-  --repo-type model `
+hf download tOMRmA/InsertAnything-checkpoints InsertAnything-HexagonHole-III-Direct-v0.pth \
+  --repo-type model \
   --local-dir source/InsertAnything/InsertAnything/tasks/direct/insertanything/checkpoints
 ```
 
-Checkpoint filenames, hashes, observation dimensions, and smoke-test commands are documented in the [checkpoint README](source/InsertAnything/InsertAnything/tasks/direct/insertanything/checkpoints/README.md).
+Checkpoint filenames, hashes, observation dimensions, and evaluation commands are documented in the [checkpoint README](source/InsertAnything/InsertAnything/tasks/direct/insertanything/checkpoints/README.md).
 
 Large checkpoint binaries are intentionally ignored by git.
 

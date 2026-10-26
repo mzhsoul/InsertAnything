@@ -6,6 +6,8 @@ This directory contains the real-robot deployment utilities for InsertAnything s
 run_multi_episode_closed_loop.py
 ```
 
+The commands below use Bash syntax and should be run from the repository root on Linux.
+
 The script runs a deterministic closed-loop policy on a Franka robot:
 
 ```text
@@ -145,7 +147,7 @@ Meanings:
 
 | Transform | Meaning |
 | --- | --- |
-| `T_AT` | API frame `A` to fingertip frame `T`. Use identity only if the API frame is already close enough to the policy fingertip frame. |
+| `T_AT` | API frame `A` to fingertip frame `T`. Use identity only when the two frames coincide. |
 | `T_BH_final` | Single-hole reference pose in Franka base frame `B`. |
 | `T_BPRE_final` | Pre-hover pose above the hole in Franka base frame `B`. |
 
@@ -188,42 +190,42 @@ Only load checkpoints from trusted sources. PyTorch checkpoints may contain seri
 
 ## 5. Basic Usage
 
-Run from this directory or from the repository root. Example from the repository root:
+Run from the repository root:
 
-```powershell
-python source/InsertAnything/InsertAnything/tasks/direct/insertanything/sim2real/run_multi_episode_closed_loop.py `
-  --config source/InsertAnything/InsertAnything/tasks/direct/insertanything/sim2real/configs/calibration_insertanything_basic.yaml `
-  --checkpoint source/InsertAnything/InsertAnything/tasks/direct/insertanything/sim2real/checkpoints/your_policy.pth `
-  --server-url http://172.16.0.1:5000 `
-  --device cpu `
-  --num-episodes 10 `
-  --max-steps 300 `
-  --policy-period-s 0.0667 `
-  --move-wait 0.2 `
-  --random-start `
-  --rand-x-range 0.05 `
-  --rand-y-range 0.05 `
-  --rand-z-up-range 0.03 `
+```bash
+python source/InsertAnything/InsertAnything/tasks/direct/insertanything/sim2real/run_multi_episode_closed_loop.py \
+  --config source/InsertAnything/InsertAnything/tasks/direct/insertanything/sim2real/configs/calibration_insertanything_basic.yaml \
+  --checkpoint path/to/policy.pth \
+  --server-url http://127.0.0.1:5000 \
+  --device cpu \
+  --num-episodes 10 \
+  --max-steps 300 \
+  --policy-period-s 0.0667 \
+  --move-wait 0.2 \
+  --random-start \
+  --rand-x-range 0.05 \
+  --rand-y-range 0.05 \
+  --rand-z-up-range 0.03 \
   --assume-grasped
 ```
 
 Contact-force deployment:
 
-```powershell
-python source/InsertAnything/InsertAnything/tasks/direct/insertanything/sim2real/run_multi_episode_closed_loop.py `
-  --config source/InsertAnything/InsertAnything/tasks/direct/insertanything/sim2real/configs/calibration_insertanything_with_contact_force_template.yaml `
-  --checkpoint source/InsertAnything/InsertAnything/tasks/direct/insertanything/sim2real/checkpoints/your_force_policy.pth `
-  --server-url http://172.16.0.1:5000 `
-  --device cpu `
-  --num-episodes 10 `
-  --max-steps 300 `
-  --policy-period-s 0.0667 `
-  --move-wait 0.2 `
-  --random-start `
-  --rand-x-range 0.05 `
-  --rand-y-range 0.05 `
-  --rand-z-up-range 0.03 `
-  --contact-force-source robot_state.force_K_debug `
+```bash
+python source/InsertAnything/InsertAnything/tasks/direct/insertanything/sim2real/run_multi_episode_closed_loop.py \
+  --config source/InsertAnything/InsertAnything/tasks/direct/insertanything/sim2real/configs/calibration_insertanything_with_contact_force_template.yaml \
+  --checkpoint path/to/force_policy.pth \
+  --server-url http://127.0.0.1:5000 \
+  --device cpu \
+  --num-episodes 10 \
+  --max-steps 300 \
+  --policy-period-s 0.0667 \
+  --move-wait 0.2 \
+  --random-start \
+  --rand-x-range 0.05 \
+  --rand-y-range 0.05 \
+  --rand-z-up-range 0.03 \
+  --contact-force-source robot_state.force_K_debug \
   --assume-grasped
 ```
 
@@ -240,7 +242,7 @@ python source/InsertAnything/InsertAnything/tasks/direct/insertanything/sim2real
 
 | Argument | Default | Meaning |
 | --- | --- | --- |
-| `--server-url` | `http://172.16.0.1:5000` | Robot server base URL. |
+| `--server-url` | `http://127.0.0.1:5000` | Robot server base URL. Set this to the control computer address when the server is remote. |
 | `--device` | `cpu` | Torch inference device. |
 | `--num-episodes` | `10` | Number of episodes to run. |
 | `--max-steps` | `300` | Maximum policy steps per episode. |

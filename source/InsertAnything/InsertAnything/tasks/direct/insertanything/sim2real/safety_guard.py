@@ -28,7 +28,7 @@ def _clip_vec_with_flags(v: np.ndarray, low: np.ndarray, high: np.ndarray) -> tu
 
 @dataclass
 class SafetyGuardConfig:
-    """Implementation helper."""
+    """Cartesian limits applied to policy-generated targets."""
 
     hole_box_lower: tuple[float, float, float] = (-0.055, -0.055, 0.0)
     hole_box_upper: tuple[float, float, float] = (+0.055, +0.055, 0.06)
@@ -90,7 +90,7 @@ class SafetyGuard:
         T_BPRE: np.ndarray,
         orientation_ref_pose: np.ndarray | None = None,
     ) -> SafetyGuardOutput:
-        """Implementation helper."""
+        """Clip a candidate target to configured step and workspace limits."""
         cfg = self.cfg
 
         p_current = pose_position(current_T_BT)

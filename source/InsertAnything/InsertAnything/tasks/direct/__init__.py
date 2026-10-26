@@ -3,4 +3,4 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-import gymnasium as gym  # noqa: F401
+"""Direct reinforcement-learning tasks provided by InsertAnything."""

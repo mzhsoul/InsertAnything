@@ -1,7 +1,16 @@
 Changelog
 ---------
 
-0.1.0 (2026-05-21)
+Unreleased
+~~~~~~~~~~
+
+Changed
+^^^^^^^
+
+* Standardized documentation and development commands for Linux.
+* Removed obsolete template files and the Isaac Nucleus checkpoint option.
+
+0.1.0 (2026-09-19)
 ~~~~~~~~~~~~~~~~~~
 
 Added

@@ -14,7 +14,7 @@ tags:
 
 # InsertAnything Checkpoints
 
-Pretrained RL-Games policies for the single-hole precision-insertion environments released with **InsertAnything: Generalizable Contact-Rich Precision Insertion from Simulation to Reality**.
+Pretrained RL-Games policies for the single-hole precision-insertion environments released with **[InsertAnything: Generalizable Contact-Rich Precision Insertion from Simulation to Reality](https://arxiv.org/abs/2609.24511)**.
 
 The policies were trained entirely in Isaac Lab. They use deployable robot observations together with a compact three-axis fingertip force signal for contact-aware motion correction. The files are intended for evaluation, visualization, and reproducibility checks with the accompanying InsertAnything codebase.
 
@@ -31,15 +31,15 @@ The checkpoint and task names must match because geometry, observation construct
 
 Install the Hugging Face CLI and download the files from the root of the InsertAnything repository:
 
-```powershell
+```bash
 python -m pip install -U huggingface_hub
 
-hf download tOMRmA/InsertAnything-checkpoints InsertAnything-LHole-III-Direct-v0.pth `
-  --repo-type model `
+hf download tOMRmA/InsertAnything-checkpoints InsertAnything-LHole-III-Direct-v0.pth \
+  --repo-type model \
   --local-dir source/InsertAnything/InsertAnything/tasks/direct/insertanything/checkpoints
 
-hf download tOMRmA/InsertAnything-checkpoints InsertAnything-HexagonHole-III-Direct-v0.pth `
-  --repo-type model `
+hf download tOMRmA/InsertAnything-checkpoints InsertAnything-HexagonHole-III-Direct-v0.pth \
+  --repo-type model \
   --local-dir source/InsertAnything/InsertAnything/tasks/direct/insertanything/checkpoints
 ```
 
@@ -49,13 +49,13 @@ Install the InsertAnything extension and its Isaac Lab dependencies before runni
 
 ### L-shape Tol. III
 
-```powershell
-python scripts/rl_games/play.py `
-  --task InsertAnything-LHole-III-Direct-v0 `
-  --num_envs 128 `
-  --headless `
-  --seed 0 `
-  --max_episodes 3 `
+```bash
+python scripts/rl_games/play.py \
+  --task InsertAnything-LHole-III-Direct-v0 \
+  --num_envs 128 \
+  --headless \
+  --seed 0 \
+  --max_episodes 3 \
   --checkpoint source/InsertAnything/InsertAnything/tasks/direct/insertanything/checkpoints/InsertAnything-LHole-III-Direct-v0.pth
 ```
 
@@ -63,13 +63,13 @@ With Isaac Sim 5.0, seed 0, and 128 environments, the release validation produce
 
 ### Hexagon Tol. III
 
-```powershell
-python scripts/rl_games/play.py `
-  --task InsertAnything-HexagonHole-III-Direct-v0 `
-  --num_envs 128 `
-  --headless `
-  --seed 0 `
-  --max_episodes 3 `
+```bash
+python scripts/rl_games/play.py \
+  --task InsertAnything-HexagonHole-III-Direct-v0 \
+  --num_envs 128 \
+  --headless \
+  --seed 0 \
+  --max_episodes 3 \
   --checkpoint source/InsertAnything/InsertAnything/tasks/direct/insertanything/checkpoints/InsertAnything-HexagonHole-III-Direct-v0.pth
 ```
 
@@ -79,10 +79,8 @@ Results can vary with the simulator version, hardware, and random seed.
 
 ## Integrity check
 
-```powershell
-Get-FileHash `
-  source/InsertAnything/InsertAnything/tasks/direct/insertanything/checkpoints/*.pth `
-  -Algorithm SHA256
+```bash
+sha256sum source/InsertAnything/InsertAnything/tasks/direct/insertanything/checkpoints/*.pth
 ```
 
 Compare the returned hashes with the table above before evaluation.

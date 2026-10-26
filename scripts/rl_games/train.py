@@ -5,8 +5,6 @@
 
 """Script to train RL agent with RL-Games."""
 
-"""Launch Isaac Sim Simulator first."""
-
 import argparse
 import sys
 from distutils.util import strtobool
@@ -36,7 +34,7 @@ parser.add_argument(
     default="rl_games_cfg_entry_point",
     help="Name of the RL agent configuration entry point.",
 )
-parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
+parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment.")
 parser.add_argument(
     "--distributed",
     action="store_true",
@@ -45,22 +43,22 @@ parser.add_argument(
 )
 parser.add_argument("--checkpoint", type=str, default=None, help="Path to model checkpoint.")
 parser.add_argument("--sigma", type=str, default=None, help="The policy's initial standard deviation.")
-parser.add_argument("--max_iterations", type=int, default=None, help="RL Policy training iterations.")
-parser.add_argument("--wandb-project-name", type=str, default=None, help="the wandb's project name")
+parser.add_argument("--max_iterations", type=int, default=None, help="Maximum number of training epochs.")
+parser.add_argument("--wandb-project-name", type=str, default=None, help="Weights & Biases project name.")
 parser.add_argument(
     "--wandb-entity",
     type=str,
     default=None,
-    help="the entity (team) of wandb's project",
+    help="Weights & Biases entity or team.",
 )
-parser.add_argument("--wandb-name", type=str, default=None, help="the name of wandb's run")
+parser.add_argument("--wandb-name", type=str, default=None, help="Weights & Biases run name.")
 parser.add_argument(
     "--track",
     type=lambda x: bool(strtobool(x)),
     default=False,
     nargs="?",
     const=True,
-    help="if toggled, this experiment will be tracked with Weights and Biases",
+    help="Track this experiment with Weights & Biases.",
 )
 parser.add_argument(
     "--export_io_descriptors",
@@ -82,8 +80,6 @@ sys.argv = [sys.argv[0]] + hydra_args
 # launch omniverse app
 app_launcher = AppLauncher(args_cli)
 simulation_app = app_launcher.app
-
-"""Rest everything follows."""
 
 import math
 import os
@@ -254,12 +250,14 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
             wandb.config.update({"agent_cfg": agent_cfg})
 
     if args_cli.checkpoint is not None:
-        runner.run({
-            "train": True,
-            "play": False,
-            "sigma": train_sigma,
-            "checkpoint": resume_path,
-        })
+        runner.run(
+            {
+                "train": True,
+                "play": False,
+                "sigma": train_sigma,
+                "checkpoint": resume_path,
+            }
+        )
     else:
         runner.run({"train": True, "play": False, "sigma": train_sigma})
 

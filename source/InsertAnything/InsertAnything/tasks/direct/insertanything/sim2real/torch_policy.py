@@ -27,7 +27,7 @@ def _infer_obs_dim_from_obs_order(
     *,
     append_prev_actions: bool = True,
 ) -> int:
-    """Implementation helper."""
+    """Compute actor observation size from a component list."""
     if not isinstance(obs_order, (list, tuple)):
         raise TypeError("obs_order must be a list or tuple of observation component names.")
 
@@ -64,7 +64,7 @@ def _infer_obs_dim_from_obs_order(
 
 @dataclass(slots=True)
 class TorchPolicyConfig:
-    """Implementation helper."""
+    """Architecture and observation settings for the recurrent actor."""
 
     obs_dim: int | None = None
     obs_order: list[str] | tuple[str, ...] | None = None
@@ -80,7 +80,7 @@ class TorchPolicyConfig:
     dtype: torch.dtype | str = torch.float32
 
     def __post_init__(self) -> None:
-        """Implementation helper."""
+        """Normalize types and validate dimensions."""
 
         if isinstance(self.dtype, str):
             if self.dtype not in _DTYPE_MAP:
@@ -132,7 +132,7 @@ class TorchPolicyConfig:
         device: str = "cpu",
         dtype: str | torch.dtype = "float32",
     ) -> TorchPolicyConfig:
-        """Implementation helper."""
+        """Create a policy configuration from explicit dimensions."""
         return cls(
             obs_dim=obs_dim,
             obs_order=obs_order,
@@ -162,7 +162,7 @@ class TorchPolicyConfig:
         device: str = "cpu",
         dtype: str | torch.dtype = "float32",
     ) -> TorchPolicyConfig:
-        """Implementation helper."""
+        """Create a policy configuration from an observation schema."""
         return cls(
             obs_order=obs_order,
             append_prev_actions=append_prev_actions,
@@ -177,7 +177,7 @@ class TorchPolicyConfig:
         )
 
     def to_serializable_dict(self) -> dict[str, Any]:
-        """Implementation helper."""
+        """Return the configuration as JSON-compatible values."""
         return {
             "obs_dim": int(self.obs_dim),
             "obs_order": list(self.obs_order) if self.obs_order is not None else None,
@@ -201,7 +201,7 @@ class PolicyState:
 
 
 class TorchRecurrentActorPolicy(nn.Module):
-    """Implementation helper."""
+    """Minimal RL-Games-compatible recurrent actor for deployment."""
 
     def __init__(self, cfg: TorchPolicyConfig):
         super().__init__()
@@ -253,7 +253,7 @@ class TorchRecurrentActorPolicy(nn.Module):
         model_dict: dict,
         cfg: TorchPolicyConfig,
     ) -> TorchRecurrentActorPolicy:
-        """Implementation helper."""
+        """Construct a policy and load an RL-Games model dictionary."""
         policy = cls(cfg)
         policy.load_from_rlg_model_dict(model_dict)
         return policy
@@ -279,7 +279,7 @@ class TorchRecurrentActorPolicy(nn.Module):
             return torch.load(path, map_location="cpu")
 
     def load_from_rlg_model_dict(self, model_dict: dict) -> None:
-        """Implementation helper."""
+        """Load actor and observation-normalization weights from RL-Games."""
         required_keys = [
             "running_mean_std.running_mean",
             "running_mean_std.running_var",
@@ -385,7 +385,7 @@ class TorchRecurrentActorPolicy(nn.Module):
         state: PolicyState,
         reset_mask: torch.Tensor,
     ) -> PolicyState:
-        """Implementation helper."""
+        """Reset recurrent state entries selected by a batch mask."""
         if reset_mask is None:
             return state
 
@@ -463,15 +463,17 @@ class TorchRecurrentActorPolicy(nn.Module):
         }
 
         if return_aux:
-            out.update({
-                "obs_norm": obs_norm,
-                "rnn_output": rnn_out,
-                "rnn_output_norm": rnn_out_norm,
-                "actor_latent": actor_latent,
-                "mu": mu,
-                "sigma": sigma,
-                "value": value,
-            })
+            out.update(
+                {
+                    "obs_norm": obs_norm,
+                    "rnn_output": rnn_out,
+                    "rnn_output_norm": rnn_out_norm,
+                    "actor_latent": actor_latent,
+                    "mu": mu,
+                    "sigma": sigma,
+                    "value": value,
+                }
+            )
 
         return out
 

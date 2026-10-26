@@ -71,5 +71,5 @@ safety_guard:
 notes:
   - "Actor observation dimension is 26 when append_prev_actions is true."
   - "Run with --contact-force-source robot_state.force_K_debug."
-  - "The robot state must expose force_K_debug or force as a 3D vector."
+  - "The robot state must expose force_K_debug as a 3D vector."
   - "Runtime CLI values override EMA, raw-action clipping, yaw limits, step limits, and hole-box bounds."

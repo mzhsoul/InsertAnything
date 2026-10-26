@@ -38,7 +38,6 @@ setup(
             "tasks/direct/insertanything/assets/*/*.usd",
             "tasks/direct/insertanything/assets/*/*/*.usd",
             "tasks/direct/insertanything/checkpoints/README.md",
-            "tasks/direct/insertanything/figures/*.png",
             "tasks/direct/insertanything/sim2real/*.py",
             "tasks/direct/insertanything/sim2real/README.md",
             "tasks/direct/insertanything/sim2real/configs/*.yaml",

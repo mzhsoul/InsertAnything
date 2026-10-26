@@ -445,7 +445,7 @@ def parse_args() -> argparse.Namespace:
         help="Calibration and deployment YAML path.",
     )
     parser.add_argument("--checkpoint", type=str, required=True, help="RL-Games checkpoint path.")
-    parser.add_argument("--server-url", type=str, default="http://172.16.0.1:5000")
+    parser.add_argument("--server-url", type=str, default="http://127.0.0.1:5000")
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--num-episodes", type=int, default=10)
     parser.add_argument("--max-steps", type=int, default=300)
@@ -527,13 +527,15 @@ def main() -> None:
     logger = ExperimentLogger(log_root)
     with (log_root / "config_snapshot.yaml").open("w", encoding="utf-8") as f:
         yaml.safe_dump(
-            _json_ready({
-                "args": vars(args),
-                "policy_config": policy_cfg.to_serializable_dict(),
-                "postprocessor_config": asdict(post_cfg),
-                "safety_guard_config": asdict(guard_cfg),
-                "calibration": raw_cfg,
-            }),
+            _json_ready(
+                {
+                    "args": vars(args),
+                    "policy_config": policy_cfg.to_serializable_dict(),
+                    "postprocessor_config": asdict(post_cfg),
+                    "safety_guard_config": asdict(guard_cfg),
+                    "calibration": raw_cfg,
+                }
+            ),
             f,
             sort_keys=False,
             allow_unicode=False,

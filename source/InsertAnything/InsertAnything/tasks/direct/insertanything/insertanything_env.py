@@ -726,7 +726,7 @@ class InsertAnythingEnv(DirectRLEnv):
     def _get_curr_failures(self):
         return torch.zeros((self.num_envs,), dtype=torch.bool, device=self.device)
 
-    def _log_factory_metrics(self, rew_dict, curr_successes):
+    def _log_episode_metrics(self, rew_dict, curr_successes):
         if torch.any(self.reset_buf):
             self.extras["successes"] = torch.count_nonzero(curr_successes) / self.num_envs
 
@@ -744,7 +744,7 @@ class InsertAnythingEnv(DirectRLEnv):
         for rew_name, rew in rew_dict.items():
             self.extras[f"logs_rew_{rew_name}"] = rew.mean()
 
-    def _get_factory_rew_dict(self):
+    def _get_reward_terms(self):
         rew_dict, rew_scales = {}, {}
         held_base_pos, held_base_quat = insertanything_utils.get_held_base_pose(
             self.held_pos, self.held_quat, self.num_envs, self.device
@@ -916,7 +916,7 @@ class InsertAnythingEnv(DirectRLEnv):
     def _get_rewards(self):
         if self.cfg.evaluation_mode:
             self.extras.clear()
-        rew_dict, rew_scales, curr_successes_for_training_log = self._get_factory_rew_dict()
+        rew_dict, rew_scales, curr_successes_for_training_log = self._get_reward_terms()
 
         rew_buf = torch.zeros((self.num_envs,), device=self.device)
         for rew_name, rew in rew_dict.items():
@@ -927,7 +927,7 @@ class InsertAnythingEnv(DirectRLEnv):
         if self.cfg.evaluation_mode:
             eval_success_mask = rew_dict["curr_success"].bool()
 
-            self._log_factory_metrics(rew_dict, eval_success_mask)
+            self._log_episode_metrics(rew_dict, eval_success_mask)
 
             if torch.any(self.reset_buf):
                 self.eval_ep_count += 1
@@ -947,7 +947,7 @@ class InsertAnythingEnv(DirectRLEnv):
 
                 self.extras["eval_printout"] = print_str
         else:
-            self._log_factory_metrics(rew_dict, curr_successes_for_training_log)
+            self._log_episode_metrics(rew_dict, curr_successes_for_training_log)
         return rew_buf
 
     def _reset_idx(self, env_ids):

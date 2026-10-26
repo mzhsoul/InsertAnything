@@ -4,9 +4,8 @@
 	"recommendations": [
 		"ms-python.python",
 		"ms-python.vscode-pylance",
-		"ban.spellright",
-		"ms-iot.vscode-ros",
+		"streetsidesoftware.code-spell-checker",
 		"ms-python.black-formatter",
-		"ms-python.flake8",
+		"ms-python.flake8"
 	]
 }

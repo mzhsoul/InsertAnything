@@ -17,7 +17,7 @@ def _as_np_1d(x: Any, expected_len: int | None = None, name: str = "array") -> n
 
 @dataclass
 class RobotState:
-    """Implementation helper."""
+    """Normalized robot state used by the deployment pipeline."""
 
     pose_BA: np.ndarray
     ee_pose6: np.ndarray
@@ -51,7 +51,7 @@ class RobotState:
 
 
 def _pose7_from_pose6_xyzrpy(pose6: np.ndarray) -> np.ndarray:
-    """Implementation helper."""
+    """Convert an XYZ-RPY pose to position and XYZW quaternion form."""
     pose6 = _as_np_1d(pose6, 6, "ee_pose6")
     pos = pose6[:3]
     rpy = pose6[3:6]
@@ -60,7 +60,7 @@ def _pose7_from_pose6_xyzrpy(pose6: np.ndarray) -> np.ndarray:
 
 
 def robot_state_from_json(state_json: dict[str, Any]) -> RobotState:
-    """Implementation helper."""
+    """Parse a robot-server response into a normalized robot state."""
     if not isinstance(state_json, dict):
         raise TypeError(f"state_json must be a dict, got {type(state_json).__name__}")
 
@@ -105,7 +105,7 @@ def robot_state_from_json(state_json: dict[str, Any]) -> RobotState:
 
 
 def fetch_robot_state(server_url: str, timeout: float = 2.0) -> RobotState:
-    """Implementation helper."""
+    """Request and parse the current state from the robot server."""
     url = server_url.rstrip("/") + "/getstate"
     resp = requests.post(url, json={}, timeout=timeout)
     resp.raise_for_status()

@@ -17,7 +17,6 @@ keywords = ["isaaclab", "reinforcement-learning", "peg-in-hole", "robotics", "in
 [dependencies]
 "isaaclab" = {}
 "isaaclab_assets" = {}
-"isaaclab_mimic" = {}
 "isaaclab_rl" = {}
 "isaaclab_tasks" = {}
 

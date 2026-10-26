@@ -13,7 +13,7 @@ All the environments are registered in the `InsertAnything` extension. They star
 with `InsertAnything-` in their name.
 """
 
-"""Launch Isaac Sim Simulator first."""
+# Launch Isaac Sim before importing task modules.
 
 from isaaclab.app import AppLauncher
 
@@ -21,8 +21,6 @@ from isaaclab.app import AppLauncher
 app_launcher = AppLauncher(headless=True)
 simulation_app = app_launcher.app
 
-
-"""Rest everything follows."""
 
 import gymnasium as gym
 import InsertAnything.tasks as insertanything_tasks
@@ -47,12 +45,14 @@ def main():
     for task_spec in gym.registry.values():
         if task_spec.id.startswith("InsertAnything-"):
             # add details to table
-            table.add_row([
-                index + 1,
-                task_spec.id,
-                task_spec.entry_point,
-                task_spec.kwargs["env_cfg_entry_point"],
-            ])
+            table.add_row(
+                [
+                    index + 1,
+                    task_spec.id,
+                    task_spec.entry_point,
+                    task_spec.kwargs["env_cfg_entry_point"],
+                ]
+            )
             # increment count
             index += 1
 
@@ -61,10 +61,6 @@ def main():
 
 if __name__ == "__main__":
     try:
-        # run the main function
         main()
-    except Exception as e:
-        raise e
     finally:
-        # close the app
         simulation_app.close()

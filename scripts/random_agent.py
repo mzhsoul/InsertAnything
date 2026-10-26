@@ -3,9 +3,7 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-"""Script to an environment with random action agent."""
-
-"""Launch Isaac Sim Simulator first."""
+"""Run an InsertAnything environment with random actions."""
 
 import argparse
 
@@ -29,8 +27,6 @@ args_cli = parser.parse_args()
 # launch omniverse app
 app_launcher = AppLauncher(args_cli)
 simulation_app = app_launcher.app
-
-"""Rest everything follows."""
 
 import gymnasium as gym
 import InsertAnything.tasks as insertanything_tasks
@@ -72,7 +68,7 @@ def main():
 
 
 if __name__ == "__main__":
-    # run the main function
-    main()
-    # close sim app
-    simulation_app.close()
+    try:
+        main()
+    finally:
+        simulation_app.close()

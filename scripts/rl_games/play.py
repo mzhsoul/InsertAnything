@@ -3,9 +3,7 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-"""Script to play a checkpoint if an RL agent from RL-Games."""
-
-"""Launch Isaac Sim Simulator first."""
+"""Evaluate an RL-Games checkpoint in an InsertAnything environment."""
 
 import argparse
 import sys
@@ -14,7 +12,7 @@ from isaaclab.app import AppLauncher
 
 # add argparse arguments
 parser = argparse.ArgumentParser(description="Play a checkpoint of an RL agent from RL-Games.")
-parser.add_argument("--video", action="store_true", default=False, help="Record videos during training.")
+parser.add_argument("--video", action="store_true", default=False, help="Record a video during evaluation.")
 parser.add_argument(
     "--video_length",
     type=int,
@@ -36,12 +34,7 @@ parser.add_argument(
     help="Name of the RL agent configuration entry point.",
 )
 parser.add_argument("--checkpoint", type=str, default=None, help="Path to model checkpoint.")
-parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment")
-parser.add_argument(
-    "--use_pretrained_checkpoint",
-    action="store_true",
-    help="Use the pre-trained checkpoint from Nucleus.",
-)
+parser.add_argument("--seed", type=int, default=None, help="Seed used for the environment.")
 parser.add_argument(
     "--use_last_checkpoint",
     action="store_true",
@@ -73,9 +66,6 @@ sys.argv = [sys.argv[0]] + hydra_args
 app_launcher = AppLauncher(args_cli)
 simulation_app = app_launcher.app
 
-"""Rest everything follows."""
-
-
 import math
 import os
 import random
@@ -94,7 +84,6 @@ from isaaclab.envs import (
 )
 from isaaclab.utils.assets import retrieve_file_path
 from isaaclab.utils.dict import print_dict
-from isaaclab.utils.pretrained_checkpoint import get_published_pretrained_checkpoint
 from isaaclab_rl.rl_games import RlGamesGpuEnv, RlGamesVecEnvWrapper
 from isaaclab_tasks.utils import get_checkpoint_path
 from isaaclab_tasks.utils.hydra import hydra_task_config
@@ -108,10 +97,6 @@ _REGISTERED_TASK_MODULES = (isaaclab_tasks, insertanything_tasks)
 @hydra_task_config(args_cli.task, args_cli.agent)
 def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agent_cfg: dict):
     """Play with RL-Games agent."""
-    # grab task name for checkpoint path
-    task_name = args_cli.task.split(":")[-1]
-    train_task_name = task_name.replace("-Play", "")
-
     # override configurations with non-hydra CLI arguments
     env_cfg.scene.num_envs = args_cli.num_envs if args_cli.num_envs is not None else env_cfg.scene.num_envs
     env_cfg.sim.device = args_cli.device if args_cli.device is not None else env_cfg.sim.device
@@ -130,12 +115,7 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
     log_root_path = os.path.abspath(log_root_path)
     print(f"[INFO] Loading experiment from directory: {log_root_path}")
     # find checkpoint
-    if args_cli.use_pretrained_checkpoint:
-        resume_path = get_published_pretrained_checkpoint("rl_games", train_task_name)
-        if not resume_path:
-            print("[INFO] Unfortunately a pre-trained checkpoint is currently unavailable for this task.")
-            return
-    elif args_cli.checkpoint is None:
+    if args_cli.checkpoint is None:
         # specify directory for logging runs
         run_dir = agent_cfg["params"]["config"].get("full_experiment_name", ".*")
         # specify name of checkpoint
@@ -177,7 +157,7 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
             "video_length": args_cli.video_length,
             "disable_logger": True,
         }
-        print("[INFO] Recording videos during training.")
+        print("[INFO] Recording a video during evaluation.")
         print_dict(video_kwargs, nesting=4)
         env = gym.wrappers.RecordVideo(env, **video_kwargs)
 

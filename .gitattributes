@@ -1,1 +1,5 @@
-*.bat text eol=crlf
+* text=auto eol=lf
+*.png -text
+*.jpg -text
+*.jpeg -text
+*.usd -text

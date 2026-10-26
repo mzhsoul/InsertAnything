@@ -107,7 +107,7 @@ def _override_policy_roll_pitch(
     pitch_std_deg: float = 0.0,
     rng: np.random.Generator | None = None,
 ) -> np.ndarray:
-    """Implementation helper."""
+    """Apply the configured roll-pitch compatibility mode."""
     if mode == "none":
         return T_BT_for_policy
 
@@ -145,7 +145,7 @@ class CalibrationData:
 
 @dataclass
 class PolicyObservationConfig:
-    """Implementation helper."""
+    """Policy observation schema loaded from calibration YAML."""
 
     obs_order: list[str]
     quat_order: str = "wxyz"
@@ -169,7 +169,7 @@ class PolicyObservationConfig:
 
 @dataclass
 class ObservationComponents:
-    """Implementation helper."""
+    """Named components used to assemble an actor observation."""
 
     fingertip_pos_rel_fixed: np.ndarray
     fingertip_quat: np.ndarray
@@ -202,7 +202,7 @@ class ObservationComponents:
 
 
 def _get_policy_observation_config(calib: CalibrationData) -> PolicyObservationConfig:
-    """Implementation helper."""
+    """Parse and validate the policy observation configuration."""
     raw_cfg = _get_policy_obs_cfg(calib)
 
     default_obs_order = [
@@ -280,7 +280,7 @@ def _get_policy_observation_config(calib: CalibrationData) -> PolicyObservationC
 
 
 def _get_obs_component_dim(name: str) -> int:
-    """Implementation helper."""
+    """Return the vector dimension of an observation component."""
     dims = {
         "fingertip_pos_rel_fixed": 3,
         "fingertip_quat": 4,
@@ -314,7 +314,7 @@ def _apply_world_yaw_offset_to_pose(T_BT: np.ndarray, yaw_offset_deg: float) -> 
 
 
 def _wrap_to_pi(angle_rad: float) -> float:
-    """Implementation helper."""
+    """Wrap an angle to the interval [-pi, pi)."""
     return (angle_rad + np.pi) % (2.0 * np.pi) - np.pi
 
 
@@ -323,7 +323,7 @@ def _apply_orientation_symmetry_to_relative_quat(
     target_quat_xyzw: np.ndarray,
     symmetry_angles_deg: list[float],
 ) -> np.ndarray:
-    """Implementation helper."""
+    """Select the symmetry-equivalent target with the smallest yaw error."""
     current_quat_xyzw = _as_np_1d(current_quat_xyzw, 4, "current_quat_xyzw")
     target_quat_xyzw = _as_np_1d(target_quat_xyzw, 4, "target_quat_xyzw")
 
@@ -373,7 +373,7 @@ def _resolve_optional_obs_component(
     robot_state: RobotState,
     calib: CalibrationData,
 ) -> np.ndarray:
-    """Implementation helper."""
+    """Read one observation component from a provider or robot state."""
     if provider is not None:
         value = provider(robot_state, calib)
         return _as_np_1d(value, expected_dim, component_name)
@@ -419,7 +419,7 @@ def load_calibration_data(yaml_path: str | Path) -> CalibrationData:
 
 
 def _get_relative_quat_reference_xyzw(calib) -> np.ndarray:
-    """Implementation helper."""
+    """Read the relative-orientation reference quaternion."""
     raw_cfg = _get_policy_obs_cfg(calib)
     ref = raw_cfg.get("relative_quat_reference_quat_xyzw", [0.0, 0.0, 0.0, 1.0])
     return _as_np_1d(ref, 4, "policy_observation.relative_quat_reference_quat_xyzw")
@@ -432,7 +432,7 @@ def build_observation(
     contact_force_provider: Callable[..., np.ndarray] | None = None,
     grasp_yaw_comp_deg: float | None = None,
 ) -> ObservationComponents:
-    """Implementation helper."""
+    """Build all policy observation components for one control step."""
     if prev_actions is None:
         prev_actions = np.zeros(6, dtype=np.float64)
     prev_actions = _as_np_1d(prev_actions, 6, "prev_actions")

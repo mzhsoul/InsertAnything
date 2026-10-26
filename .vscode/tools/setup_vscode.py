@@ -3,57 +3,32 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-"""This script sets up the vs-code settings for the Isaac Lab project.
+"""Generate VS Code settings for the InsertAnything project.
 
 This script merges the python.analysis.extraPaths from the "{ISAACSIM_DIR}/.vscode/settings.json" file into
 the ".vscode/settings.json" file.
 
-This is necessary because Isaac Sim 2022.2.1 onwards does not add the necessary python packages to the python path
-when the "setup_python_env.sh" is run as part of the vs-code launch configuration.
+The script reads Isaac Sim's Python analysis paths and adds the local extension source directory.
 """
 
 import argparse
 import os
 import pathlib
-import platform
 import re
 import sys
 
 PROJECT_DIR = pathlib.Path(__file__).parents[2]
-"""Path to the the project directory."""
+"""Path to the project directory."""
 
-try:
-    import isaacsim  # noqa: F401
-
-    isaacsim_dir = os.environ.get("ISAAC_PATH", "")
-except ModuleNotFoundError or ImportError:
-    # Create a parser to get the isaac-sim path
-    parser = argparse.ArgumentParser(description="Setup the VSCode settings for the project.")
-    parser.add_argument("--isaac_path", type=str, help="The absolute path to the Isaac Sim installation.")
-    args = parser.parse_args()
-
-    # parse the isaac-sim directory
-    isaacsim_dir = args.isaac_path
-    # check if the isaac-sim directory is provided
-    if not os.path.exists(isaacsim_dir):
-        raise FileNotFoundError(
-            f"Could not find the isaac-sim directory: {isaacsim_dir}. Please provide the correct path to the Isaac Sim"
-            " installation."
-        )
-except EOFError:
-    print("Unable to trigger EULA acceptance. This is likely due to the script being run in a non-interactive shell.")
-    print("Please run the script in an interactive shell to accept the EULA.")
-    print("Skipping the setup of the VSCode settings...")
-    sys.exit(0)
+parser = argparse.ArgumentParser(description="Set up VS Code for InsertAnything.")
+parser.add_argument("--isaac_path", type=str, default=os.environ.get("ISAAC_PATH"), help="Isaac Sim directory.")
+args = parser.parse_args()
+isaacsim_dir = args.isaac_path
 
 # check if the isaac-sim directory exists
-if not os.path.exists(isaacsim_dir):
+if not isaacsim_dir or not os.path.exists(isaacsim_dir):
     raise FileNotFoundError(
-        f"Could not find the isaac-sim directory: {isaacsim_dir}. There are two possible reasons for this:\n\t1. The"
-        " Isaac Sim directory does not exist as provided CLI path.\n\t2. The script couldn't import the 'isaacsim'"
-        " package. This could be due to the 'isaacsim' package not being installed in the Python"
-        " environment.\n\nPlease make sure that the Isaac Sim directory exists or that the 'isaacsim' package is"
-        " installed."
+        f"Could not find the Isaac Sim directory: {isaacsim_dir}. Pass it with --isaac_path or set ISAAC_PATH."
     )
 
 ISAACSIM_DIR = isaacsim_dir
@@ -116,7 +91,6 @@ def overwrite_python_analysis_extra_paths(isaaclab_settings: str) -> str:
 
     # combine them into a single string
     path_names = ",\n\t\t".expandtabs(4).join(path_names)
-    # deal with the path separator being different on Windows and Unix
     path_names = path_names.replace("\\", "/")
 
     # replace the path names in the Isaac Lab settings file with the path names parsed
@@ -146,14 +120,9 @@ def overwrite_default_python_interpreter(isaaclab_settings: str) -> str:
     # read executable name
     python_exe = os.path.normpath(sys.executable)
 
-    # replace with Isaac Sim's python.sh or python.bat scripts to make sure python with correct
-    # source paths is set as default
+    # Replace the bundled interpreter with Isaac Sim's Linux launcher.
     if f"kit{os.sep}python{os.sep}bin{os.sep}python" in python_exe:
-        # Check if the OS is Windows or Linux to use appropriate shell file
-        if platform.system() == "Windows":
-            python_exe = python_exe.replace(f"kit{os.sep}python{os.sep}bin{os.sep}python3", "python.bat")
-        else:
-            python_exe = python_exe.replace(f"kit{os.sep}python{os.sep}bin{os.sep}python3", "python.sh")
+        python_exe = python_exe.replace(f"kit{os.sep}python{os.sep}bin{os.sep}python3", "python.sh")
 
     # replace the default python interpreter in the Isaac Lab settings file with the path to the
     # python interpreter in the Isaac Lab directory

@@ -1,14 +1,4 @@
-# C++
-**/cmake-build*/
-**/build*/
-**/*.so
-**/*.log*
-
-# Omniverse
-**/*.dmp
-**/.thumbs
-
-# No USD files allowed in the repo except published InsertAnything assets
+# Published USD assets are the only USD files tracked by the repository.
 **/*.usd
 **/*.usda
 **/*.usdc
@@ -21,12 +11,8 @@
 **/__pycache__/
 **/.pytest_cache/
 **/*.pyc
-**/*.pb
-
-# Docker/Singularity
-**/*.sif
-docker/cluster/exports/
-docker/.container.cfg
+**/build*/
+**/*.so
 
 # IDE
 **/.idea/
@@ -43,16 +29,16 @@ docker/.container.cfg
 **/outputs/*
 **/videos/*
 **/wandb/*
-**/.neptune/*
 **/contact_force_logs/*
-docker/artifacts/
 *.tmp
+**/*.log*
+**/*.dmp
 
-# Doc Outputs
+# Generated documentation
 **/docs/_build/*
 **/generated/*
 
-# Isaac-Sim packman
+# Isaac Sim links and build products
 _isaac_sim*
 _repo
 _build
@@ -67,15 +53,3 @@ _build
 **/*.pth
 **/*.pt
 **/*.ckpt
-
-# Pre-Trained Checkpoints
-/.pretrained_checkpoints/
-
-# Teleop Recorded Dataset
-/datasets/
-
-# Tests
-tests/
-
-# Docker history
-.isaac-lab-docker-history

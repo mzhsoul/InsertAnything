@@ -32,7 +32,7 @@ def _skew(v: np.ndarray) -> np.ndarray:
 
 
 def _check_quat_input_no_autofix(q, name: str = "q") -> np.ndarray:
-    """Implementation helper."""
+    """Validate an XYZW quaternion without changing its norm."""
     q = _as_np_1d(q, 4, name)
 
     if not np.all(np.isfinite(q)):
@@ -46,7 +46,7 @@ def _check_quat_input_no_autofix(q, name: str = "q") -> np.ndarray:
 
 
 def quat_normalize(q) -> np.ndarray:
-    """Implementation helper."""
+    """Return a normalized XYZW quaternion."""
     q = _check_quat_input_no_autofix(q, "q")
     n = np.linalg.norm(q)
     return q / n
@@ -66,7 +66,7 @@ def quat_inv(q) -> np.ndarray:
 
 
 def quat_mul(q1, q2) -> np.ndarray:
-    """Implementation helper."""
+    """Multiply two XYZW quaternions."""
     q1 = _check_quat_input_no_autofix(q1, "q1")
     q2 = _check_quat_input_no_autofix(q2, "q2")
 
@@ -82,7 +82,7 @@ def quat_mul(q1, q2) -> np.ndarray:
 
 
 def quat_to_rotmat(q) -> np.ndarray:
-    """Implementation helper."""
+    """Convert an XYZW quaternion to a rotation matrix."""
     q = _check_quat_input_no_autofix(q, "q")
     x, y, z, w = q
 
@@ -102,7 +102,7 @@ def quat_to_rotmat(q) -> np.ndarray:
 
 
 def rotmat_to_quat(R) -> np.ndarray:
-    """Implementation helper."""
+    """Convert a rotation matrix to an XYZW quaternion."""
     R = _as_np_mat(R, (3, 3), "R")
 
     trace = np.trace(R)
@@ -136,7 +136,7 @@ def rotmat_to_quat(R) -> np.ndarray:
 
 
 def euler_xyz_to_quat(roll: float, pitch: float, yaw: float) -> np.ndarray:
-    """Implementation helper."""
+    """Convert XYZ Euler angles to an XYZW quaternion."""
     cr = np.cos(roll * 0.5)
     sr = np.sin(roll * 0.5)
     cp = np.cos(pitch * 0.5)
@@ -153,7 +153,7 @@ def euler_xyz_to_quat(roll: float, pitch: float, yaw: float) -> np.ndarray:
 
 
 def quat_to_euler_xyz(q) -> np.ndarray:
-    """Implementation helper."""
+    """Convert an XYZW quaternion to XYZ Euler angles."""
     q = _check_quat_input_no_autofix(q, "q")
     x, y, z, w = q
 
@@ -175,14 +175,14 @@ def quat_to_euler_xyz(q) -> np.ndarray:
 
 
 def make_pose7(position, quat) -> np.ndarray:
-    """Implementation helper."""
+    """Combine a position and XYZW quaternion into a seven-value pose."""
     position = _as_np_1d(position, 3, "position")
     quat = _check_quat_input_no_autofix(quat, "quat")
     return np.concatenate([position, quat], axis=0)
 
 
 def split_pose7(pose7) -> tuple[np.ndarray, np.ndarray]:
-    """Implementation helper."""
+    """Split a seven-value pose into position and XYZW quaternion."""
     pose7 = _as_np_1d(pose7, 7, "pose7")
     position = pose7[:3].copy()
     quat = _check_quat_input_no_autofix(pose7[3:7], "pose7[3:7]")
@@ -210,7 +210,7 @@ def mat_to_pose7(T) -> np.ndarray:
 
 
 def compose_pose(T_XY, T_YZ) -> np.ndarray:
-    """Implementation helper."""
+    """Compose two seven-value rigid transforms."""
     p_XY, q_XY = split_pose7(T_XY)
     p_YZ, q_YZ = split_pose7(T_YZ)
 
@@ -234,7 +234,7 @@ def invert_pose(T_XY) -> np.ndarray:
 
 
 def relative_pose(T_XA, T_XB) -> np.ndarray:
-    """Implementation helper."""
+    """Compute the pose of frame B relative to frame A."""
     return compose_pose(invert_pose(T_XA), T_XB)
 
 
@@ -255,26 +255,26 @@ def rotate_vector(T_XY, v_Y) -> np.ndarray:
 
 
 def compute_fingertip_pose(T_BA, T_AT) -> np.ndarray:
-    """Implementation helper."""
+    """Compute the fingertip pose in the robot base frame."""
     return compose_pose(T_BA, T_AT)
 
 
 def compute_fingertip_pos_rel_fixed(T_BT, T_BH) -> np.ndarray:
-    """Implementation helper."""
+    """Compute fingertip position relative to the fixed target."""
     p_BT, _ = split_pose7(T_BT)
     p_BH, _ = split_pose7(T_BH)
     return p_BT - p_BH
 
 
 def compute_fingertip_quat_rel_fixed(T_BT, T_BH) -> np.ndarray:
-    """Implementation helper."""
+    """Compute fingertip orientation relative to the fixed target."""
     _, q_BT = split_pose7(T_BT)
     _, q_BH = split_pose7(T_BH)
     return quat_mul(quat_inv(q_BT), q_BH)
 
 
 def shift_twist_from_A_to_T(v_A, w_A, r_AT) -> tuple[np.ndarray, np.ndarray]:
-    """Implementation helper."""
+    """Shift a spatial velocity from the API frame to the fingertip frame."""
     v_A = _as_np_1d(v_A, 3, "v_A")
     w_A = _as_np_1d(w_A, 3, "w_A")
     r_AT = _as_np_1d(r_AT, 3, "r_AT")
