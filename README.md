@@ -4,6 +4,7 @@
 [![Isaac Lab](https://img.shields.io/badge/Isaac%20Lab-2.2.1-76B900)](https://github.com/isaac-sim/IsaacLab)
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](LICENSE)
+[![arXiv](https://img.shields.io/badge/arXiv-2609.24511-b31b1b.svg)](https://arxiv.org/abs/2609.24511)
 [![Checkpoints](https://img.shields.io/badge/Hugging%20Face-Checkpoints-FFD21E?logo=huggingface&logoColor=black)](https://huggingface.co/tOMRmA/InsertAnything-checkpoints)
 
 InsertAnything is an Isaac Lab project for force-conditioned, contact-rich peg-in-hole insertion in simulation and on a real Franka robot. It targets tight-clearance precision insertion, including Tol. IV settings with nominal clearance down to 0.02 mm.
@@ -19,17 +20,25 @@ The repository provides:
 
 The codebase accompanies the paper:
 
-```text
-InsertAnything: Generalizable Contact-Rich Precision Insertion from Simulation to Reality
-```
+**[InsertAnything: Generalizable Contact-Rich Precision Insertion from Simulation to Reality](https://arxiv.org/abs/2609.24511)**
 
-![InsertAnything overview](docs/figures/insertanything_overview.png)
+<p align="center">
+  <img src="docs/figures/insertanything_overview.png" alt="InsertAnything overview" width="88%">
+</p>
 
-**Figure 1.** Overview of the robot setup, standard geometries and clearances, simulation training, and force-conditioned real-world deployment evaluated in the accompanying paper.
+**Framework overview (Fig. 1 in the paper).** Robot setup, standard geometries and clearances, simulation training, and force-conditioned real-world deployment.
 
-![InsertAnything method](docs/figures/insertanything_method.png)
+<p align="center">
+  <img src="docs/figures/insertanything_reward_design.png" alt="Decoupled gated reward design" width="78%">
+</p>
 
-**Figure 2.** InsertAnything stabilizes force-conditioned policy learning through exponential-moving-average force smoothing and a state-independent policy standard deviation.
+**Decoupled gated reward (Fig. 2 in the paper).** Planar error, yaw error, and vertical error are represented separately. As alignment improves, gating increases the reward for approaching the final insertion target.
+
+<p align="center">
+  <img src="docs/figures/insertanything_method.png" alt="Stable force-feedback policy learning" width="78%">
+</p>
+
+**Stable force-feedback learning (Fig. 3 in the paper).** Exponential-moving-average force smoothing and a state-independent policy standard deviation stabilize force-conditioned policy learning.
 
 ## Highlights
 
@@ -132,6 +141,22 @@ source/InsertAnything/InsertAnything/tasks/direct/insertanything/sim2real/run_mu
 ```
 
 It requires a calibrated target pose, a compatible Franka control server, and the sensor/control interfaces described in [the sim-to-real README](source/InsertAnything/InsertAnything/tasks/direct/insertanything/sim2real/README.md).
+
+## Citation
+
+If you find InsertAnything useful in your research, please cite:
+
+```bibtex
+@misc{ma2026insertanythinggeneralizablecontactrichprecision,
+  title         = {InsertAnything: Generalizable Contact-Rich Precision Insertion from Simulation to Reality},
+  author        = {Zhenghua Ma and Xinpan Meng and Zeyu Liu and Muyuan Ma and Hengdi Zhang and Houcheng Li and Long Cheng},
+  year          = {2026},
+  eprint        = {2609.24511},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.RO},
+  url           = {https://arxiv.org/abs/2609.24511}
+}
+```
 
 ## License
 
